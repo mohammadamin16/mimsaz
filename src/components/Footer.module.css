@@ -1,0 +1,18 @@
+.container {
+  /* background-color: #333; */
+  color: #fff;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  color: black;
+  background-color: white;
+}
+
+.container > div {
+  display: flex;
+  flex-direction: column;
+}
