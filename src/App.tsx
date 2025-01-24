@@ -37,39 +37,31 @@ function App() {
   }, [selectedMeme]);
 
   return (
-    <WebAppProvider
-      options={{
-        smoothButtonsTransition: true,
-      }}
-    >
-      <div className={styles.app}>
-        <Header
-          selectedMeme={selectedMeme}
-          onBack={() => {
-            setSelectedMeme("");
-          }}
-        />
-        {selectedMeme && selectedTemplate ? (
-          <Generator memeTemplate={selectedTemplate} />
-        ) : (
-          <div className={styles.list}>
-            {memes.map((m) => (
-              <Template
-                onSelect={() => setSelectedMeme(m.id)}
-                key={m.id}
-                template_id={m.id}
-                url={m.url}
-                uses={m.use_count}
-                name={m.name}
-              />
-            ))}
-          </div>
-        )}
-        {/* <Footer /> */}
-      </div>
-      <MainButton />
-      <BackButton />
-    </WebAppProvider>
+    <div className={styles.app}>
+      <Header
+        selectedMeme={selectedMeme}
+        onBack={() => {
+          setSelectedMeme("");
+        }}
+      />
+      {selectedMeme && selectedTemplate ? (
+        <Generator memeTemplate={selectedTemplate} />
+      ) : (
+        <div className={styles.list}>
+          {memes.map((m) => (
+            <Template
+              onSelect={() => setSelectedMeme(m.id)}
+              key={m.id}
+              template_id={m.id}
+              url={m.url}
+              uses={m.use_count}
+              name={m.name}
+            />
+          ))}
+        </div>
+      )}
+      {/* <Footer /> */}
+    </div>
   );
 }
 
