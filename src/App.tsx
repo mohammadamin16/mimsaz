@@ -9,8 +9,9 @@ import {
   MainButton,
   BackButton,
 
-  
+
 } from "@vkruglikov/react-telegram-web-app";
+import { Header } from "./components/Header";
 
 export interface MemeTemplate {
   id: string;
