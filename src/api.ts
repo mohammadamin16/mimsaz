@@ -1,8 +1,9 @@
 import axios from "axios";
 
 const BASE_URL = "https://api.memebot.ocontest.ir";
-// @ts-ignore
-const userId = window?.Bale?.initData?.user?.id || "311532832";
+
+declare let Bale: any;
+const userId = Bale?.initData?.user?.id || "311532832";
 
 export function get_memes() {
   return axios.get(`${BASE_URL}/memebot`, {});
