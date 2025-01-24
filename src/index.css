@@ -7,6 +7,11 @@ input,
 textarea {
   font-family: "Vazirmatn", serif;
 }
+input::placeholder,
+textarea {
+  text-align: right;
+  font-family: "Vazirmatn", serif;
+}
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

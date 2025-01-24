@@ -85,14 +85,13 @@ function App() {
   }, []);
   return (
     <div className={styles.app}>
-      <Header
-        selectedMeme={selectedMeme}
-        onBack={() => {
-          setSelectedMeme("");
-        }}
-      />
       {selectedMeme && selectedTemplate ? (
-        <Generator memeTemplate={selectedTemplate} />
+        <Generator
+          onBack={() => {
+            setSelectedMeme("");
+          }}
+          memeTemplate={selectedTemplate}
+        />
       ) : (
         <div className={styles.list}>
           {memes.map((m) => (

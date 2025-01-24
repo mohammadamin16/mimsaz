@@ -6,7 +6,7 @@ declare let Bale: any;
 const userId = Bale?.initData?.user?.id || "311532832";
 
 export function get_memes() {
-  return axios.get(`${BASE_URL}/memebot`, {});
+  return axios.get(`${BASE_URL}/memebot?box_count=0`);
 }
 
 export function create_meme(template_id: string, text1: string, text2: string) {
@@ -53,44 +53,35 @@ export function upload_meme(file: File | Blob | ArrayBuffer, fileName: string) {
     },
   });
 }
-export function sendCanvasToAPI(canvasElement) {
-  // Convert canvas to Blob
-  canvasElement.toBlob((blob) => {
-    if (!blob) {
-      console.error("Failed to convert canvas to Blob.");
-      return;
-    }
+export async function sendCanvasToAPI(canvasElement) {
+  return new Promise((resolve, reject) => {
+    canvasElement.toBlob(async (blob) => {
+      if (!blob) {
+        reject(new Error("Failed to convert canvas to Blob."));
+        return;
+      }
 
-    // Convert Blob to File
-    const file = new File([blob], "canvas_image.png", {
-      type: "image/png", // Set the MIME type
-    });
+      const file = new File([blob], "canvas_image.png", {
+        type: "image/png",
+      });
 
-    // Create FormData and append the file
-    const formData = new FormData();
-    formData.append("file", file);
+      try {
+        const response = await fetch(`${BASE_URL}/memebot/send`, {
+          method: "PUT",
+          headers: {
+            "bale-id": userId,
+          },
+          body: file,
+        });
 
-    // Send the file to the API using fetch
-    fetch(`${BASE_URL}/memebot/send`, {
-      method: "PUT",
-      headers: {
-        "bale-id": userId, // Custom header
-      },
-      body: file, // Send the file as binary data
-    })
-      .then((response) => {
-        if (response.ok) {
-          console.log("File uploaded successfully!");
-          return response.json(); // Parse JSON response if applicable
-        } else {
+        if (!response.ok) {
           throw new Error(`Error uploading file: ${response.status}`);
         }
-      })
-      .then((data) => {
-        console.log("Server response:", data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }, "image/png"); // Specify the image format (e.g., 'image/png', 'image/jpeg')
+
+        resolve(response);
+      } catch (error) {
+        reject(error);
+      }
+    }, "image/png");
+  });
 }

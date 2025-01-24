@@ -21,6 +21,23 @@
   border-radius: 10px;
 }
 
+.input {
+  outline: none;
+  font-size: large;
+  padding: 12px;
+  text-align: right;
+  background-color: #242f3d;
 
+  font-family: "Vazirmatn", serif;
+  color: white;
+  border: none;
+}
 
+.input::placeholder {
+  color: #adaebc;
+}
 
+.input:focus {
+  outline: none;
+  background-color: #1a1a1a;
+}

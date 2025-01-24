@@ -7,6 +7,7 @@ import { Button, Input, Typography } from "antd";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 
 interface GeneratorProps {
+  onBack: () => void;
   memeTemplate: MemeTemplate;
 }
 
@@ -34,11 +35,18 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
   };
 
   const exportMeme = () => {
+    setLoading(true);
     const memeElement = document.getElementById("meme");
 
     if (memeElement) {
-      html2canvas(memeElement).then((canvas) => {
-        sendCanvasToAPI(canvas);
+      html2canvas(memeElement, {
+        useCORS: true,
+        allowTaint: true,
+      }).then((canvas) => {
+        sendCanvasToAPI(canvas).then(() => {
+          setLoading(false);
+          close();
+        })
       });
     }
   };
@@ -59,23 +67,11 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
 
   // stores image of the meme template in a blob to prevent CORS issues
   const imageBlobUrl = useMemo(() => {
-    if (!props.memeTemplate.url) {
-      return "";
-    }
-
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    const img = new Image();
-    img.src = props.memeTemplate.url;
-    img.crossOrigin = "anonymous";
-
-    img.onload = () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx?.drawImage(img, 0, 0);
-    };
-
-    return canvas.toDataURL();
+    fetch(props.memeTemplate.url).then((response) => {
+      response.blob().then((blob) => {
+        setImageUrl(URL.createObjectURL(blob));
+      });
+    });
   }, [props.memeTemplate.url]);
 
   return (
@@ -83,98 +79,100 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
       <div
         id="meme"
         style={{
-          backgroundImage: `url('${imageBlobUrl}')`,
-          border: "1px solid #000",
           backgroundSize: "cover",
           width: "90%",
           position: "relative",
+          overflow: "hidden",
           textAlign: "center",
         }}
       >
         <img
           className={styles.image}
           // src={imageUrl || props.memeTemplate.url}
-          src={imageBlobUrl}
+          // src={imageBlobUrl}
+          src={imageUrl}
           // alt={props.memeTemplate.name}
         />
 
-        {topText &&
-        <Draggable position={topTextPosition} onDrag={handleTopTextDrag}>
-          <h2
-            style={{
-              position: "absolute",
-              top: "10px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              color: "white",
-              fontSize: calculateFontSize(topText), // Dynamic font size
-              cursor: "move",
-              fontFamily: "VazirMatn, sans-serif",
-              whiteSpace: "normal", // Allow text to wrap
-              wordWrap: "break-word", // Break long words
-              overflowWrap: "break-word", // Break long words
-              maxWidth: "200px", // Limit width to prevent overflow
-              textAlign: "center", // Center-align text
-              backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
-              padding: "5px 10px", // Add padding for better readability
-              borderRadius: "5px", // Rounded corners
-              textShadow: "2px 2px 4px rgba(0, 0, 0, 0.8)", // Improved text shadow
-            }}
-          >
-            {topText}
-          </h2>
-        </Draggable>
-        }
+        {topText && (
+          <Draggable position={topTextPosition} onDrag={handleTopTextDrag}>
+            <h2
+              style={{
+                position: "absolute",
+                top: "10px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                color: "white",
+                fontSize: calculateFontSize(topText), // Dynamic font size
+                cursor: "move",
+                fontFamily: "VazirMatn, sans-serif",
+                whiteSpace: "normal", // Allow text to wrap
+                wordWrap: "break-word", // Break long words
+                overflowWrap: "break-word", // Break long words
+                maxWidth: "200px", // Limit width to prevent overflow
+                textAlign: "center", // Center-align text
+                backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+                padding: "5px 10px", // Add padding for better readability
+                borderRadius: "5px", // Rounded corners
+                textShadow: "2px 2px 4px rgba(0, 0, 0, 0.8)", // Improved text shadow
+              }}
+            >
+              {topText}
+            </h2>
+          </Draggable>
+        )}
 
-{bottomText &&
-
-        <Draggable position={bottomTextPosition} onDrag={handleBottomTextDrag}>
-          <h2
-            style={{
-              position: "absolute",
-              bottom: "10px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              color: "white",
-              fontSize: calculateFontSize(bottomText), // Dynamic font size
-              cursor: "move",
-              fontFamily: "VazirMatn, sans-serif",
-              whiteSpace: "normal", // Allow text to wrap
-              wordWrap: "break-word", // Break long words
-              overflowWrap: "break-word", // Break long words
-              maxWidth: "200px", // Limit width to prevent overflow
-              textAlign: "center", // Center-align text
-              backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
-              padding: "5px 10px", // Add padding for better readability
-              borderRadius: "5px", // Rounded corners
-              textShadow: "2px 2px 4px rgba(0, 0, 0, 0.8)", // Improved text shadow
-            }}
+        {bottomText && (
+          <Draggable
+            position={bottomTextPosition}
+            onDrag={handleBottomTextDrag}
           >
-            {bottomText}
-          </h2>
-        </Draggable>
-}
+            <h2
+              style={{
+                position: "absolute",
+                bottom: "10px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                color: "white",
+                fontSize: calculateFontSize(bottomText), // Dynamic font size
+                cursor: "move",
+                fontFamily: "VazirMatn, sans-serif",
+                whiteSpace: "normal", // Allow text to wrap
+                wordWrap: "break-word", // Break long words
+                overflowWrap: "break-word", // Break long words
+                maxWidth: "200px", // Limit width to prevent overflow
+                textAlign: "center", // Center-align text
+                backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+                padding: "5px 10px", // Add padding for better readability
+                borderRadius: "5px", // Rounded corners
+                textShadow: "2px 2px 4px rgba(0, 0, 0, 0.8)", // Improved text shadow
+              }}
+            >
+              {bottomText}
+            </h2>
+          </Draggable>
+        )}
       </div>
 
       <div className={styles.input_list}>
-        <Typography.Title level={5}>متن اول</Typography.Title>
         <Input
+          className={styles.input}
+          autoComplete="off"
           onChange={(e) => {
             setTopText(e.target.value);
           }}
-          placeholder="Top Text"
+          placeholder="متن اول"
           value={topText}
         />
-        <Typography.Title level={5}>متن دوم</Typography.Title>
         <Input
+          className={styles.input}
+          autoComplete="off"
           onChange={(e) => {
             setBottomText(e.target.value);
           }}
-          placeholder="Bottom Text"
+          placeholder="متن دوم"
           value={bottomText}
         />
-        {loading && <div>Loading...</div>}
-
         <div
           style={{
             display: "flex",
@@ -185,35 +183,23 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
             position: "fixed",
           }}
         >
-          {/* <Button
-            onClick={() => {
-              send_to_me(imageUrl || props.memeTemplate.url).then(() => {
-                alert("فرستادیم برات");
-              });
-            }}
+          <Button
+            onClick={props.onBack}
             type="dashed"
-          >
-            Export
-          </Button> */}
-          {/* <Button
             size="large"
-            style={{}}
-            loading={loading}
-            onClick={() => {
-              setLoading(true);
-              create_meme(props.memeTemplate.id, topText, bottomText).then(
-                (res) => {
-                  setLoading(false);
-                  setImageUrl(res.data.url);
-                  console.log(res.data);
-                }
-              );
+            style={{
+              backgroundColor: "#5555",
+              outline: "none",
+              border: "none",
+              color: "white",
+              margin: "20px 20px 0 20px",
+              padding: "10px 20px",
+              fontFamily: "VazirMatn, sans-serif",
             }}
             disabled={!topText && !bottomText}
-            type="dashed"
           >
-            Generate
-          </Button> */}
+            بازگشت
+          </Button>
 
           <Button
             onClick={exportMeme}
@@ -221,7 +207,8 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
             type="primary"
             size="large"
             style={{
-              backgroundColor:"#3B82F6",
+              opacity: !topText && !bottomText ? 0.5 : 1,
+              backgroundColor: "#3B82F6",
               outline: "none",
               border: "none",
               color: "white",
@@ -231,7 +218,7 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
             }}
             disabled={!topText && !bottomText}
           >
-           همینو بفرست
+            همینو بفرست
           </Button>
         </div>
       </div>
