@@ -1,9 +1,22 @@
-import styles from "./Haeder.module.css"
+import styles from "./Haeder.module.css";
 
-export const Header = () => {
-    return (
-        <div className={styles.container}>
-            <div>Mimsaz</div>
-        </div>
-    )
+interface HeaderProps {
+  onBack: () => void;
+  selectedMeme: string;
 }
+export const Header: React.FC<HeaderProps> = (props) => {
+  return (
+    <div className={styles.container}>
+      {props.selectedMeme && (
+        <button
+          onClick={() => {
+            props.onBack();
+          }}
+        >
+          back
+        </button>
+      )}
+      {/* <div>Mimsaz</div> */}
+    </div>
+  );
+};

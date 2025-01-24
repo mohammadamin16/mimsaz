@@ -1,6 +1,5 @@
 .container {
-  /* width: 169px; */
-  width: calc(50% - 6px);
+  width: calc(50% - 24px);
   border-radius: 10px;
   text-align: start;
   height: 226px;
@@ -9,6 +8,10 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   margin-top: 12px;
+  background-color: #17212b;
+}
+.container:active {
+  transform: scale(0.98);
 }
 
 .image {
@@ -17,17 +20,19 @@
   object-fit: cover;
 }
 
-.name{
+.name {
   padding: 4px;
   white-space: nowrap;
   font-weight: bold;
   font-size: small;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: #6c7883;
 }
 
-.count{
-  opacity: .5;
+.count {
+  opacity: 0.5;
   padding: 4px;
+  color: #a0aebb;
   font-size: x-small;
 }

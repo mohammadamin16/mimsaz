@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const BASE_URL = "http://192.168.207.207:4040";
+const BASE_URL = "https://api.memebot.ocontest.ir";
+// @ts-ignore
+const userId = window.Bale.initData.user.id;
 
 export function get_memes() {
   return axios.get(`${BASE_URL}/memebot`, {});
@@ -10,7 +12,6 @@ export function create_meme(
   template_id: string,
   text1: string,
   text2: string,
-  bale_id: string
 ) {
   return axios.post(
     `${BASE_URL}/memebot`,
@@ -20,7 +21,7 @@ export function create_meme(
     },
     {
       headers: {
-        "bale-id": bale_id,
+        "bale-id": userId,
       },
     }
   );
@@ -29,12 +30,12 @@ export function create_meme(
 export function load_history() {
   return axios.get(`${BASE_URL}/memebot/history`, {
     headers: {
-      "bale-id": "123",
+      "bale-id": userId,
     },
   });
 }
 
-export function send_to_me(url: string, bale_id: string) {
+export function send_to_me(url: string) {
   return axios.post(
     `${BASE_URL}/memebot/send`,
     {
@@ -42,7 +43,7 @@ export function send_to_me(url: string, bale_id: string) {
     },
     {
       headers: {
-        "bale-id": bale_id,
+        "bale-id": userId,
       },
     }
   );
