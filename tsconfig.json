@@ -7,6 +7,17 @@
   "compilerOptions": {
     "noUnusedParameters": false,
     "strict": false,
-    "noUnusedLocals": false
+
+   "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": false, // Disable unused local variable warnings
+    "noUnusedParameters": false, // Disable unused parameter warnings
+    "jsx": "react-jsx"
+
   }
 }

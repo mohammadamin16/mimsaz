@@ -1,3 +1,4 @@
+import { theme } from "../App";
 import { formatNumber } from "../utils";
 import styles from "./Template.module.css";
 
@@ -16,10 +17,15 @@ export const Template: React.FC<TemplateProps> = (props) => {
       className={styles.container}
     >
       <img className={styles.image} width={40} height={40} src={props.url} />
-      <div className={styles.name}>{props.name}</div>
-      <div className={styles.count}>{formatNumber(props.uses)} uses</div>
+      <div className={styles.name}
+
+        style={{ color: theme.subtitle_text_color }}
+      >{props.name}</div>
+      <div className={styles.count}
+
+        style={{ color: theme.hint_color }}
+      >{formatNumber(props.uses)} uses</div>
     </div>
   );
 };
 
-// این گروه برای هکاتون ساخت مینی‌اپ ایجاد شده است تا شرکت‌کنندگان بتوانند اینجا با یکدیگر و با برگزارکنندگان هکاتون گفتگو کنند.
