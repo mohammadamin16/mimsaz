@@ -1,5 +1,11 @@
-*{
-   font-family: 'VazirMatn'
+* {
+  font-family: "Vazirmatn", serif;
+}
+
+/* set the font for inputs */
+input,
+textarea {
+  font-family: "Vazirmatn", serif;
 }
 
 :root {

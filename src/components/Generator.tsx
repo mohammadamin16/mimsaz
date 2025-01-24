@@ -37,11 +37,7 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
     const memeElement = document.getElementById("meme");
 
     if (memeElement) {
-      html2canvas(memeElement, {
-        foreignObjectRendering: true,
-        allowTaint: true,
-        useCORS: true,
-      }).then((canvas) => {
+      html2canvas(memeElement).then((canvas) => {
         sendCanvasToAPI(canvas);
       });
     }
@@ -71,7 +67,7 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
     const ctx = canvas.getContext("2d");
     const img = new Image();
     img.src = props.memeTemplate.url;
-    // img.crossOrigin = "anonymous";
+    img.crossOrigin = "anonymous";
 
     img.onload = () => {
       canvas.width = img.width;
@@ -88,9 +84,9 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
         id="meme"
         style={{
           backgroundImage: `url('${imageBlobUrl}')`,
-          // backgroundImage: `url('${imageUrl || props.memeTemplate.url}')`,
+          border: "1px solid #000",
           backgroundSize: "cover",
-          width: "100%",
+          width: "90%",
           position: "relative",
           textAlign: "center",
         }}
@@ -101,6 +97,8 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
           src={imageBlobUrl}
           // alt={props.memeTemplate.name}
         />
+
+        {topText &&
         <Draggable position={topTextPosition} onDrag={handleTopTextDrag}>
           <h2
             style={{
@@ -126,6 +124,9 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
             {topText}
           </h2>
         </Draggable>
+        }
+
+{bottomText &&
 
         <Draggable position={bottomTextPosition} onDrag={handleBottomTextDrag}>
           <h2
@@ -152,6 +153,7 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
             {bottomText}
           </h2>
         </Draggable>
+}
       </div>
 
       <div className={styles.input_list}>
@@ -183,7 +185,7 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
             position: "fixed",
           }}
         >
-          <Button
+          {/* <Button
             onClick={() => {
               send_to_me(imageUrl || props.memeTemplate.url).then(() => {
                 alert("فرستادیم برات");
@@ -192,8 +194,8 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
             type="dashed"
           >
             Export
-          </Button>
-          <Button
+          </Button> */}
+          {/* <Button
             size="large"
             style={{}}
             loading={loading}
@@ -211,18 +213,26 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
             type="dashed"
           >
             Generate
-          </Button>
+          </Button> */}
 
-          <button
+          <Button
             onClick={exportMeme}
+            loading={loading}
+            type="primary"
+            size="large"
             style={{
-              marginTop: "20px",
+              backgroundColor:"#3B82F6",
+              outline: "none",
+              border: "none",
+              color: "white",
+              margin: "20px",
               padding: "10px 20px",
               fontFamily: "VazirMatn, sans-serif",
-            }} // Apply VazirMatn font
+            }}
+            disabled={!topText && !bottomText}
           >
-            Export Meme
-          </button>
+           همینو بفرست
+          </Button>
         </div>
       </div>
     </div>
