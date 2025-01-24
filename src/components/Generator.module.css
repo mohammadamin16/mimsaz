@@ -5,6 +5,8 @@
   align-items: center;
   margin-top: 12px;
   height: 100vh;
+  position: relative;
+  margin-bottom: 100px;
 }
 
 .input_list {

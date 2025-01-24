@@ -18,20 +18,30 @@ function close() {
 export const Generator: React.FC<GeneratorProps> = (props) => {
   const [topText, setTopText] = useState("");
   const [bottomText, setBottomText] = useState("");
+  const [thirdText, setThirdText] = useState("");
+  const [forthText, setForthText] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
 
   const [topTextPosition, setTopTextPosition] = useState({ x: 0, y: 0 });
   const [bottomTextPosition, setBottomTextPosition] = useState({ x: 0, y: 0 });
+  const [thirdTextPos, setThirdTextPos] = useState({ x: 0, y: 0 });
+  const [forthTextPos, setForthTextPos] = useState({ x: 0, y: 0 });
 
   // Handle dragging for top text
   const handleTopTextDrag = (e: DraggableEvent, data: DraggableData) => {
     setTopTextPosition({ x: data.x, y: data.y });
   };
 
-  // Handle dragging for bottom text
   const handleBottomTextDrag = (e: DraggableEvent, data: DraggableData) => {
     setBottomTextPosition({ x: data.x, y: data.y });
+  };
+
+  const handleThirdTextDrag = (e: DraggableEvent, data: DraggableData) => {
+    setThirdTextPos({ x: data.x, y: data.y });
+  };
+  const handleForthTextDrag = (e: DraggableEvent, data: DraggableData) => {
+    setForthTextPos({ x: data.x, y: data.y });
   };
 
   const exportMeme = () => {
@@ -91,7 +101,7 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
           // src={imageUrl || props.memeTemplate.url}
           // src={imageBlobUrl}
           src={imageUrl}
-          // alt={props.memeTemplate.name}
+        // alt={props.memeTemplate.name}
         />
 
         {topText && (
@@ -111,10 +121,10 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
                 overflowWrap: "break-word", // Break long words
                 maxWidth: "200px", // Limit width to prevent overflow
                 textAlign: "center", // Center-align text
-                backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+                // backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
                 padding: "5px 10px", // Add padding for better readability
                 borderRadius: "5px", // Rounded corners
-                textShadow: "2px 2px 4px rgba(0, 0, 0, 0.8)", // Improved text shadow
+                textShadow: "0px 0px 10px rgba(0, 0, 0)", // Improved text shadow
               }}
             >
               {topText}
@@ -142,13 +152,70 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
                 overflowWrap: "break-word", // Break long words
                 maxWidth: "200px", // Limit width to prevent overflow
                 textAlign: "center", // Center-align text
-                backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
                 padding: "5px 10px", // Add padding for better readability
                 borderRadius: "5px", // Rounded corners
-                textShadow: "2px 2px 4px rgba(0, 0, 0, 0.8)", // Improved text shadow
+                textShadow: "0px 0px 10px rgba(0, 0, 0)", // Improved text shadow
               }}
             >
               {bottomText}
+            </h2>
+          </Draggable>
+        )}
+        {thirdText && (
+          <Draggable
+            position={thirdTextPos}
+            onDrag={handleThirdTextDrag}
+          >
+            <h2
+              style={{
+                position: "absolute",
+                bottom: "10px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                color: "white",
+                fontSize: calculateFontSize(thirdText), // Dynamic font size
+                cursor: "move",
+                fontFamily: "VazirMatn, sans-serif",
+                whiteSpace: "normal", // Allow text to wrap
+                wordWrap: "break-word", // Break long words
+                overflowWrap: "break-word", // Break long words
+                maxWidth: "200px", // Limit width to prevent overflow
+                textAlign: "center", // Center-align text
+                padding: "5px 10px", // Add padding for better readability
+                borderRadius: "5px", // Rounded corners
+                textShadow: "0px 0px 10px rgba(0, 0, 0)", // Improved text shadow
+              }}
+            >
+              {thirdText}
+            </h2>
+          </Draggable>
+        )}
+        {forthText && (
+          <Draggable
+            position={forthTextPos}
+            onDrag={handleForthTextDrag}
+          >
+            <h2
+              style={{
+                position: "absolute",
+                bottom: "10px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                color: "white",
+                fontSize: calculateFontSize(forthText), // Dynamic font size
+                cursor: "move",
+                fontFamily: "VazirMatn, sans-serif",
+                whiteSpace: "normal", // Allow text to wrap
+                wordWrap: "break-word", // Break long words
+                overflowWrap: "break-word", // Break long words
+                maxWidth: "200px", // Limit width to prevent overflow
+                textAlign: "center", // Center-align text
+                padding: "5px 10px", // Add padding for better readability
+                borderRadius: "5px", // Rounded corners
+                textShadow: "0px 0px 10px rgba(0, 0, 0)", // Improved text shadow
+              }}
+            >
+              {forthText}
             </h2>
           </Draggable>
         )}
@@ -164,15 +231,39 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
           placeholder="متن اول"
           value={topText}
         />
-        <Input
-          className={styles.input}
-          autoComplete="off"
-          onChange={(e) => {
-            setBottomText(e.target.value);
-          }}
-          placeholder="متن دوم"
-          value={bottomText}
-        />
+        {props.memeTemplate.box_count >= 2 &&
+          <Input
+            className={styles.input}
+            autoComplete="off"
+            onChange={(e) => {
+              setBottomText(e.target.value);
+            }}
+            placeholder="متن دوم"
+            value={bottomText}
+          />
+        }
+        {props.memeTemplate.box_count >= 3 &&
+          <Input
+            className={styles.input}
+            autoComplete="off"
+            onChange={(e) => {
+              setThirdText(e.target.value);
+            }}
+            placeholder="متن سوم"
+            value={thirdText}
+          />
+        }
+        {props.memeTemplate.box_count >= 4 &&
+          <Input
+            className={styles.input}
+            autoComplete="off"
+            onChange={(e) => {
+              setForthText(e.target.value);
+            }}
+            placeholder="متن چهارم"
+            value={forthText}
+          />
+        }
         <div
           style={{
             display: "flex",
@@ -180,7 +271,7 @@ export const Generator: React.FC<GeneratorProps> = (props) => {
             gap: 4,
             flexDirection: "column",
             bottom: 0,
-            position: "fixed",
+            position: "absolute",
           }}
         >
           <Button
